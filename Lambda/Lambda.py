@@ -1,4 +1,3 @@
-from LambdaLayer.LambdaLayers import LambdaLayers
 from aws_cdk import ( 
     aws_lambda as _lambda,
     aws_s3 as s3,
@@ -26,10 +25,9 @@ class LambdaConstruct(Construct):
 
         self._function = _lambda.Function(
             self, 'detectAnomalies',
-            runtime=_lambda.Runtime.PYTHON_3_7,
+            runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(path.join(__dirname, './AnomalyDetection')),
             handler='detectAnomalies.handler',
-            layers=[props['lambdaLayer']], 
             # props['boto3Layer'],
             # props['pillowLayer'],
             # props['requestsLayer']],
@@ -71,6 +69,6 @@ class LambdaConstruct(Construct):
 
         notification = s3_notifications.LambdaDestination(self._function)
         notification.bind(self, bucket)
-        bucket.add_object_created_notification(notification, s3.NotificationKeyFilter(prefix=inference,suffix='.txt'))
+        bucket.add_object_created_notification(notification, s3.NotificationKeyFilter(prefix=inference))
         
 
